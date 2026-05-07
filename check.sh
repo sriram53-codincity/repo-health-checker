@@ -28,5 +28,15 @@ if find . -name ".env" | grep -q .; then
   exit 1
 fi
 
+# Check 5: Commit message has more than 5 words
+
+commit_msg=$(git log -1 --pretty=%B)
+word_count=$(echo "$commit_msg" | wc -w)
+
+if [ "$word_count" -lt 5 ]; then
+  echo "Commit message must contain at least 5 words"
+  exit 1
+fi
+
 echo "All checks passed!"
 exit 0
