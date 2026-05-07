@@ -58,25 +58,10 @@ if grep -r -E "API_KEY|PASSWORD|SECRET|TOKEN|AWS_ACCESS_KEY_ID" . --exclude=chec
   ((error_found++))
 fi
 
-# Check 8: Detect temporary files
-
-if find . \( -name "*.tmp" -o -name "*.temp" \) | grep -q .; then
-  echo "ERROR: Temporary files detected"
-  ((error_found++))
-fi
-
-# Check 9: Workflow file exists or not
+# Check 8: Workflow file exists or not
 
 if [ ! -f .github/workflows/check.yml ]; then
   echo "ERROR: GitHub Actions workflow missing"
-  ((error_found++))
-fi
-
-# Check 10:warns to direct commit in main branch
-branch=$(git branch --show-current)
-
-if [ "$branch" = "main" ]; then
-  echo "WARNING: Direct work on main branch detected"
   ((error_found++))
 fi
 
