@@ -41,8 +41,48 @@ if [ "$word_count" -lt 5 ]; then
   ((error_found++))
 fi
 
+#----------------------------------------------------------------------------------------
+
+# Check 6: No direct commits to main branch
+branch=$(git branch --show-current)
+
+if [ "$branch" = "main" ]; then
+  echo "WARNING: Direct work on main branch detected"
+  ((error_found++))
+fi
+
+# Check 7:Detect possible secrets Keys
+
+if grep -r -E "API_KEY|PASSWORD|SECRET|TOKEN|AWS_ACCESS_KEY_ID" . --exclude=check.sh; then
+  echo "ERROR: Possible secret keys detected"
+  ((error_found++))
+fi
+
+# Check 8: Detect temporary files
+
+if find . \( -name "*.tmp" -o -name "*.temp" \) | grep -q .; then
+  echo "ERROR: Temporary files detected"
+  ((error_found++))
+fi
+
+# Check 9: Workflow file exists or not
+
+if [ ! -f .github/workflows/check.yml ]; then
+  echo "ERROR: GitHub Actions workflow missing"
+  ((error_found++))
+fi
+
+# Check 10:warns to direct commit in main branch
+branch=$(git branch --show-current)
+
+if [ "$branch" = "main" ]; then
+  echo "WARNING: Direct work on main branch detected"
+  ((error_found++))
+fi
+
+
 # Final Result
-if [ "$error_found" -eq 1 ]; then
+if [ "$error_found" -ne 0 ]; then
   echo "$error_found"
   exit 1
 else
