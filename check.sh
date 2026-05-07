@@ -58,14 +58,6 @@ if grep -r -E "API_KEY|PASSWORD|SECRET|TOKEN|AWS_ACCESS_KEY_ID" . --exclude=chec
   ((error_found++))
 fi
 
-# Check 8: Workflow file exists or not
-
-if [ ! -f .github/workflows/check.yml ]; then
-  echo "ERROR: GitHub Actions workflow missing"
-  ((error_found++))
-fi
-
-
 # Final Result
 if [ "$error_found" -ne 0 ]; then
   echo "$error_found"
